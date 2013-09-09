@@ -32,6 +32,20 @@
   x)
 
 
+(defn echo->
+  [x & msgs]
+  (apply println "[Echo]" (concat msgs (list (pr-str x))))
+  x)
+
+
+(defn echo->>
+  [msg & msgs-and-x]
+  (let [all (into [msg] msgs-and-x)
+        x (last all)
+        msgs (butlast all)]
+    (apply echo-> x msgs)))
+
+
 (defn array-zipmap
   [ks vs]
   (->> (map vector ks vs)
