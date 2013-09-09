@@ -75,7 +75,7 @@ Multi-values symbol arguments are joined using a default identifier delimiter.
 
 ##### Identifier decoration
 
-Should you want to quote the database identifiers, specify the `:subst` fn in options:
+Should you want to quote the database identifiers, specify the `:subst` arity-1 (identifier-name) fn in options:
 
 ```clojure
 (t/realize t {'dept-col ["emp" "dept_id"] :dept-val 20} {:subst #(str "`" % "`")})
@@ -148,6 +148,16 @@ See `sqlrat.entity/find-all` and `sqlrat.entity/find-where` for other options.
 (def up (e/update-by-id BlogPost (e/cols [:content])))
 (t/realize up {:post-id 10 :content "Foo bar baz"})
 ;;=> ("UPDATE post SET content = ? WHERE post_id = ?" "Foo bar baz" 10)
+```
+
+**Compare-and-swap (optimistic locking)** operations with UPDATE can be done with renamed columns:
+
+```clojure
+(def sp (e/update-where BlogPost [:post-id :created]
+                        (e/cols {:content :content :created :new-created})))
+(t/realize sp {:post-id 10 :content "Foo bar baz quux" :created 9})
+;;=> ("UPDATE post SET content = ? , created = ? WHERE post_id = ? AND created = ?"
+;;..  "Foo bar baz quux" #inst "2013-09-09T15:13:45.112000000-00:00" 10 9)
 ```
 
 See `sqlrat.entity/update-all` and `sqlrat.entity/update-where` for other options.
