@@ -95,6 +95,9 @@
                 :name "John" :grade 5})
            ["UPDATE emp SET name = ? AND grade = ?" "John" 5])
         "two syargs, two kwargs"))
+  (testing "multi kwarg values"
+    (is (= (rt "FROM emp WHERE dept_id IN (" :ids ")" {:ids [1 2 3]})
+           ["FROM emp WHERE dept_id IN ( ?, ?, ? )" 1 2 3])))
   (testing "Identifer and Placeholder transformation"
     (is (= (st {'table "emp" 'token "emp_code"} {:subst #(str \` % \` )}
                "SELECT" 'token "FROM" 'table)
