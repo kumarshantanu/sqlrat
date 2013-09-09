@@ -8,15 +8,8 @@
     `(do ~@body)))
 
 
-(defmacro assert-coll-is-not-map
-  [coll]
-  (when *assert*
-    `(when (map? ~coll) (u/throw-format-msg
-                         "Expected a linear collection but found map %s"
-                         (pr-str ~coll)))))
-
-
-(defmacro verify
+(defmacro verify-return
+  "Verify `expected` form -- throw exception if error, return `found` otherwise."
   [expected found]
   (let [expected-form (pr-str expected)
         found-name (pr-str found)]
@@ -28,7 +21,7 @@
                              (str (type found#)))))))
 
 
-(defmacro verify-true
+(defmacro verify
   [expected found]
-  `(do (verify ~expected ~found)
+  `(do (verify-return ~expected ~found)
        true))

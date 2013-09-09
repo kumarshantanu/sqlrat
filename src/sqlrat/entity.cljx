@@ -245,10 +245,10 @@
                                                      [[] []]))
                           [update-cols ph-cols]))]
     (um/when-assert
-     (um/verify-true ((some-fn nil? coll?) where-cols) where-cols)
+     (um/verify ((some-fn nil? coll?) where-cols) where-cols)
      (if (map? where-cols)
        (um/verify (every? keyword? (keys where-cols)) where-cols)
-       (um/verify-true (every? keyword? where-cols) where-cols))
+       (um/verify (every? keyword? where-cols) where-cols))
      (um/verify (every? keyword? update-cols) update-cols)
      (let [kset-common (set/intersection (set ph-cols) (set where-kset))]
        (when (seq kset-common)

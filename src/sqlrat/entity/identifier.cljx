@@ -130,9 +130,8 @@
   "Validate `candidate-cols` (map or collection) and return a collection
   [column-keywords placeholder-keywords]."
   [e candidate-cols cols-kind] {:pre [(um/verify (entity? e) e)
-                                      (um/verify-true
-                                       ((some-fn nil? coll?) candidate-cols)
-                                       candidate-cols)
+                                      (um/verify ((some-fn nil? coll?) candidate-cols)
+                                                 candidate-cols)
                                       (um/verify (string? cols-kind) cols-kind)]}
   (um/when-assert
    (if (map? candidate-cols)
