@@ -5,8 +5,8 @@
 
 
 (defmacro deftemplate
-  [sym & tokens]
-  `(def ~sym (t/make-template (vector ~@tokens))))
+  [sym tokens]
+  `(def ~sym (t/make-or-parse-template ~tokens)))
 
 
 (defmacro defentity

@@ -43,6 +43,13 @@
               (every? (some-fn string? symbol? keyword?) tokens)))))
 
 
+(defn make-or-parse-template
+  "Parse template if argument is string, make template otherwise."
+  [sql-or-tokens]
+  (if (string? sql-or-tokens) (parse-template sql-or-tokens)
+      (make-template sql-or-tokens)))
+
+
 (defn realize-syms
   "Partially realize template for symbols only and return the template."
   ([t args opts] {:pre [(template? t)

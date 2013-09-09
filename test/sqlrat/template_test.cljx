@@ -154,11 +154,27 @@
         "one mis-spelt syarg, one mis-spelt kwarg")))
 
 
-;; (def one #sqlrat/template ["SELECT * FROM" 'table "WHERE" 'id "=" :id])
-(deftemplate one "SELECT * FROM" 'table "WHERE" 'id "=" :id)
+(deftemplate one ["SELECT * FROM" 'table "WHERE" 'id "=" :id])
+
+(deftemplate two "SELECT * FROM emp WHERE emp_id = :id")
 
 
 (deftest test-deftemplate
   (testing "deftemplate"
     (is (= (core/realize one {'table "emp" 'id "emp_id" :id 10} {})
+           ["SELECT * FROM emp WHERE emp_id = ?" 10]))
+    (is (= (core/realize two {:id 10} {})
            ["SELECT * FROM emp WHERE emp_id = ?" 10]))))
+
+
+#+clj (def r-one '#sqlrat/template ["SELECT * FROM" table "WHERE" id "=" :id])
+
+#+clj (def r-two #sqlrat/template "SELECT * FROM emp WHERE emp_id = :id")
+
+
+#+clj (deftest test-template-reader
+        (testing "#sqlrat/template"
+          (is (= (core/realize r-one {'table "emp" 'id "emp_id" :id 10} {})
+                 ["SELECT * FROM emp WHERE emp_id = ?" 10]))
+          (is (= (core/realize r-two {:id 10} {})
+                 ["SELECT * FROM emp WHERE emp_id = ?" 10]))))

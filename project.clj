@@ -22,7 +22,7 @@
                   {:source-paths ["test"] :output-path "target/generated/test-cljs" :rules :cljs}]}
   :source-paths ["src"  "target/generated/clj" "resources"]
   :test-paths   ["test" "target/generated/test-clj"]
-  :profiles {:jst {:dependencies [[org.clojure/clojurescript #_"0.0-1847" #_"0.0-1853" "0.0-1859"]
+  :profiles {:jst {:dependencies [[org.clojure/clojurescript #_"0.0-1847" #_"0.0-1853" "0.0-1859" #_"0.0-1877"]
                                   [com.cemerick/clojurescript.test "0.0.4"]]
                    :plugins [[lein-cljsbuild "0.3.2"]]
                    :hooks [leiningen.cljsbuild]
@@ -32,8 +32,12 @@
                                                     :pretty-print true}}]
                                :test-commands {"unit-tests" ["phantomjs" "runners/phantomjs.js" "target/cljs/testable.js"]}}}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
-             :1.5 {dependencies [[org.clojure/clojure "1.5.1"]]}}
+             :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
+             :pkg {:source-paths ["target/generated/cljs"]}
+             }
   :aliases {"1.4" ["with-profile" "1.4" "do" "clean," "cljx" "once,"]
             "dev" ["with-profile" "1.5,jst" "do" "clean," "cljx" "once,"]
+            "clr" ["do" "clean," "cljx" "once," "clr"]
+            "pkg" ["with-profile" "pkg" "do" "clean," "cljx" "once,"]
             })
 
