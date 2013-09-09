@@ -2,7 +2,7 @@
 
 SQL template library for Clojure, ClojureScript and ClojureCLR
 
-It helps generate well formed SQL using templates and entities. While one can write hand-crafted templates to generate complex SQL, entities are useful to easily generate mundane [CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete) SQL via auto-generated templates.
+It helps generate well formed SQL using templates and entities. While one can write hand-crafted templates to generate complex SQL, entities are useful to easily generate mundane [CRUD](http://en.wikipedia.org/wiki/Create,_read,_update_and_delete) SQL via auto-generated templates. This library does not execute SQL; it only outputs appropriate SQL with placeholders for JDBC, ODBC, ADO.NET and Node.js libraries.
 
 ## Usage
 
