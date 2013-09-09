@@ -73,7 +73,7 @@ Multi-values symbol arguments are joined using a default identifier delimiter.
 ;;=> ("SELECT * FROM emp WHERE emp.dept_id = ?" 20)
 ```
 
-#### Entity decoration
+##### Identifier decoration
 
 Should you want to quote the database identifiers, specify the `:subst` fn in options:
 
