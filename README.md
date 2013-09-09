@@ -50,7 +50,7 @@ Templates must be realized in order to generate the SQL and arguments:
 
 Keywords can also act as multi-value placeholders, for example the following:
 
-```
+```clojure
 (def t #sqlrat/template "SELECT * FROM emp WHERE id IN (:ids)")
 (t/realize t {:ids [1 2 3]})
 ;;=> ("SELECT * FROM emp WHERE id IN ( ?, ?, ? )" 1 2 3)
@@ -66,6 +66,42 @@ Templates also support symbol arguments as identifier placeholders:
 ;;=> ("SELECT * FROM emp WHERE dept_id = ?" 20)
 ```
 
+Multi-values symbol arguments are joined using a default identifier delimiter.
+
+```clojure
+(t/realize t {'dept-col ["emp" "dept_id"] :dept-val 20})
+;;=> ("SELECT * FROM emp WHERE emp.dept_id = ?" 20)
+```
+
+#### Entity decoration
+
+Should you want to quote the database identifiers, specify the `:subst` fn in options:
+
+```clojure
+(t/realize t {'dept-col ["emp" "dept_id"] :dept-val 20} {:subst #(str "`" % "`")})
+;;=> ("SELECT * FROM emp WHERE `emp`.`dept_id` = ?" 20)
+```
+
+#### Value placeholder decoration
+
+When using PostgreSQL, you may have to specially decorate the `?` placeholders for integers on the JVM:
+
+```clojure
+(t/realize t {'dept-col "dept_id" :dept-val 20} {:place (t/pgsql-wrap-place)})
+;;=> ("SELECT * FROM emp WHERE dept_id = ?::integer" 20)
+```
+
+Unless you are on the JVM, you may not want the `?` placeholder in the rendered SQL - use a custom arity-2 (index and column-name) `:place` function
+
+```clojure
+;; for some Node.js database libraries
+(t/realize t {'dept-col "dept_id" :dept-val 20} {:place t/dollar-place})
+;;=> ("SELECT * FROM emp WHERE dept_id = $1" 20)
+
+;; for ADO.NET SqlCommand API
+(t/realize t {'dept-col "dept_id" :dept-val 20} {:place t/at-param-place})
+;;=> ("SELECT * FROM emp WHERE dept_id = @param1" 20)
+```
 
 ### Entity
 
