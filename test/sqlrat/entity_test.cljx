@@ -55,6 +55,10 @@
             tu (e/update-where e [:dept-code] (e/cols [:emp-code]))
             ;; Compare-and-swap use case
             ts (e/update-where e [:dept-code] (e/cols {:emp-code :emp-code :dept-code :new-dept-code}))
+            ;; Default-value use case
+            tv (e/update-where e [:dept-code] (e/cols {:emp-code :emp-code :created-at :new-created-at}))
+            tw (e/update-where e [:dept-code] (e/cols [:created-at]))
+            ;; delete
             td (e/delete-where e [:emp-code :dept-code])]
         (is (= (rt tf {:dept-code 20})
                ["SELECT e_code FROM emp WHERE dept_code = ?" 20]))
@@ -62,6 +66,10 @@
                ["UPDATE emp SET e_code = ? WHERE dept_code = ?" 10 20]))
         (is (= (rt ts {:emp-code 10 :dept-code 20 :new-dept-code 30})
                ["UPDATE emp SET e_code = ? , dept_code = ? WHERE dept_code = ?" 10 30 20]))
+        (is (= (rt tv {:emp-code 10 :dept-code 20}) ; should get default value :created-at
+               ["UPDATE emp SET e_code = ? , created_at = ? WHERE dept_code = ?" 10 10 20]))
+        (is (= (rt tw {:dept-code 20}) ; should pick up default value of :created-at
+               ["UPDATE emp SET created_at = ? WHERE dept_code = ?" 10 20]))
         (is (= (rt td {:emp-code 10 :dept-code 20})
                ["DELETE FROM emp WHERE e_code = ? AND dept_code = ?" 10 20]))))
     (testing "c[RUD] by id"

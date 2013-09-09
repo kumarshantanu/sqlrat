@@ -256,7 +256,12 @@
                 "Found overlapping placeholders %s between UPDATE %s and WHERE %s columns"
                 (map (comp pr-str sort) [kset-common ph-cols where-cols])))))
     (let [where-vcols (when where-cols (ii/as-where-cols e where-cols))
-          where-keyws (map last where-vcols)]
+          where-keyws (map last where-vcols)
+          uc-defaults (->> (ii/get-specs e update-cols)
+                           (map vector ph-cols)
+                           (remove (comp nil? :default last))
+                           (mapcat (fn [[pc spec]] [pc (:default spec)]))
+                           (apply array-map))]
       (-> (crud/update
            (crud/table 'table)
            (crud/colnames (ii/get-colnames e update-cols))
@@ -264,6 +269,7 @@
            (and where-cols (crud/where-cols where-vcols))
            (and where-op (crud/where-op where-op)))
           (t/partial (if-let [n (:table e)] {'table n} {}))
+          (t/partial uc-defaults)
           (apply-ephmap e (concat update-cols where-keyws))))))
 
 
