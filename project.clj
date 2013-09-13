@@ -22,9 +22,9 @@
                   {:source-paths ["test"] :output-path "target/generated/test-cljs" :rules :cljs}]}
   :source-paths ["src"  "target/generated/clj" "resources"]
   :test-paths   ["test" "target/generated/test-clj"]
-  :profiles {:jst {:dependencies [[org.clojure/clojurescript #_"0.0-1847" #_"0.0-1853" "0.0-1859" #_"0.0-1877"]
+  :profiles {:jst {:dependencies [[org.clojure/clojurescript #_"0.0-1847" #_"0.0-1853" #_"0.0-1859" "0.0-1877"]
                                   [com.cemerick/clojurescript.test "0.0.4"]]
-                   :plugins [[lein-cljsbuild "0.3.2"]]
+                   :plugins [[lein-cljsbuild "0.3.3"]]
                    :hooks [leiningen.cljsbuild]
                    :cljsbuild {:builds [{:source-paths ["target/generated/cljs" "target/generated/test-cljs"]
                                          :compiler {:output-to "target/cljs/testable.js"
