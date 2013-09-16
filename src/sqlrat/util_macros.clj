@@ -16,9 +16,8 @@
     `(if ~expected
        ~found
        (let [found# ~found]
-         (u/throw-format-msg "Expected %s but found `%s` = %s (%s)"
-                             ~expected-form ~found-name (pr-str found#)
-                             (str (type found#)))))))
+         (u/throw-str "Expected " ~expected-form " but found `" ~found-name
+                      "` = " (pr-str found#) "(" (str (type found#)) ")")))))
 
 
 (defmacro verify

@@ -53,7 +53,7 @@
 (defn assert-entity
   [e]
   (if-not (entity? e)
-    (u/throw-format-msg "Expected entity but found %s" (pr-str e))
+    (u/throw-str "Expected entity but found " (pr-str e))
     true))
 
 
@@ -66,8 +66,8 @@
         missing (set/difference all-set col-set)
         surplus (set/difference col-set all-set)]
     (if (seq surplus)
-      (u/throw-format-msg "Surplus cols: %s, missing cols: %s"
-                          (pr-str (sort surplus)) (pr-str (sort missing)))
+      (u/throw-str "Surplus cols: " (pr-str (sort surplus)) ", missing cols: "
+                   (pr-str (sort missing)))
       true)))
 
 
@@ -79,10 +79,10 @@
   (when (some #(not (contains? (:colkeyw-spec-map e) %)) subject-cols)
     (let [s-cols (set subject-cols)
           e-cols (set (keys (:colkeyw-spec-map e)))]
-      (u/throw-format-msg
-       "Invalid %s columns: %s - valid unused columns: %s"
-       cols-kind (pr-str (sort (set/difference s-cols e-cols)))
-       (pr-str (sort (set/difference e-cols s-cols))))))
+      (u/throw-str "Invalid " cols-kind " columns: "
+                   (pr-str (sort (set/difference s-cols e-cols)))
+                   " - valid unused columns: "
+                   (pr-str (sort (set/difference e-cols s-cols))))))
   true)
 
 
@@ -185,7 +185,7 @@
        (case lx
          "asc"  "ASC"
          "desc" "DESC"
-         (u/throw-format-msg "Expected :asc or :desc but found %s" (pr-str x)))))
+         (u/throw-str "Expected :asc or :desc but found " (pr-str x)))))
   ([]
      "ASC"))
 

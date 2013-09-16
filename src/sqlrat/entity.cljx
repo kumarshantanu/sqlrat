@@ -32,15 +32,15 @@
                               flatten
                               (apply array-map))]
     (when (and idcols (not (or (list? idcols) (vector? idcols))))
-      (u/throw-format-msg "ID columns: Expected a list or a vector, found %s"
-                          (pr-str idcols)))
+      (u/throw-str "ID columns: Expected a list or a vector, found "
+                   (pr-str idcols)))
     (when (seq idcols)
       (let [spcols-set (set (keys col-kw-meta-map))
             idcols-set (set idcols)
             defaulters (set/difference idcols-set spcols-set)]
         (when (seq defaulters)
-          (u/throw-format-msg "ID columns %s are not among specified columns %s"
-                              (sort defaulters) (keys col-kw-meta-map)))))
+          (u/throw-str "ID columns " (sort defaulters)
+                       " are not among specified columns " (keys col-kw-meta-map)))))
     (ii/create-entity entity-name table idcols colkeyw-spec-map colname-spec-map)))
 
 
@@ -87,10 +87,10 @@
                       ent-keys (->> name-spec-map
                                     keys
                                     set)]
-                  (u/throw-format-msg
-                   "Invalid column names: %s - valid unused names: %s"
-                   (pr-str (sort (set/difference row-keys ent-keys)))
-                   (pr-str (sort (set/difference ent-keys row-keys)))))))
+                  (u/throw-str "Invalid column names: "
+                               (pr-str (sort (set/difference row-keys ent-keys)))
+                               " - valid unused names: "
+                               (pr-str (sort (set/difference ent-keys row-keys)))))))
         ;; map is lazy, exception may not occur in time, so doall
         doall)))
 
@@ -252,9 +252,9 @@
      (um/verify (every? keyword? update-cols) update-cols)
      (let [kset-common (set/intersection (set ph-cols) (set where-kset))]
        (when (seq kset-common)
-         (apply u/throw-format-msg
-                "Found overlapping placeholders %s between UPDATE %s and WHERE %s columns"
-                (map (comp pr-str sort) [kset-common ph-cols where-cols])))))
+         (let [[c u w] (map (comp pr-str sort) [kset-common ph-cols where-cols])]
+           (u/throw-str "Found overlapping placeholders " c
+                        " between UPDATE " u " and WHERE " w " columns")))))
     (let [where-vcols (when where-cols (ii/as-where-cols e where-cols))
           where-keyws (map last where-vcols)
           uc-defaults (->> (ii/get-specs e update-cols)
@@ -322,26 +322,26 @@
   (um/when-assert
    (doseq [each-equiv equiv-colsets]
      (when (< (count each-equiv) 2)
-       (u/throw-format-msg "Expected 2 or more column sets but found only %d: %s"
-                           (count each-equiv) (pr-str each-equiv)))
+       (u/throw-str "Expected 2 or more column sets but found only "
+                    (count each-equiv) ": " (pr-str each-equiv)))
      (doseq [each-colset each-equiv]
        (let [[e & cols] each-colset]
          (um/verify (ii/entity? e) e)
          (um/verify (every? keyword? cols) cols)
          (ii/assert-valid-cols e cols "Entity")
          (when-not (distinct? cols)
-           (u/throw-format-msg "Found duplicate columns: %s" (pr-str cols)))))
+           (u/throw-str "Found duplicate columns: " (pr-str cols)))))
      (let [equiv-entities (map first each-equiv)]
        (when-not (distinct? equiv-entities)
-         (u/throw-format-msg "Found duplicate entities in same equivalent set: %s"
-                             (pr-str equiv-entities)))))
+         (u/throw-str "Found duplicate entities in same equivalent set: "
+                      (pr-str equiv-entities)))))
    (let [all-colsets (apply concat equiv-colsets)]
      (when-not (distinct? all-colsets)
-       (u/throw-format-msg "Found duplicate column sets: %s"
-                           (->> (frequencies all-colsets)
-                                (filter #(> %2 1))
-                                (mapcat key)
-                                pr-str)))))
+       (u/throw-str "Found duplicate column sets: "
+                    (->> (frequencies all-colsets)
+                         (filter #(> %2 1))
+                         (mapcat key)
+                         pr-str)))))
   (->> equiv-colsets
        (reduce (fn [m equiv-coll]
                  (let [equiv-set (set equiv-coll)]
@@ -379,7 +379,7 @@
   (um/verify (every? entity? (keys relmap)) relmap)
   (um/verify (every? map? (vals relmap)) relmap)
   (let [adis (fn [xs] (when-not (apply distinct? xs)
-                       (u/throw-format-msg "Found duplicates: %s" (pr-str xs))))]
+                       (u/throw-str "Found duplicates: " (pr-str xs))))]
     (doseq [[base-entity rel-submap] relmap
             [rel-entity [base-cols rel-cols]] rel-submap]
       (um/verify (entity? rel-entity) rel-entity)
@@ -388,8 +388,8 @@
       (ii/assert-valid-cols base-entity base-cols "Entity")
       (ii/assert-valid-cols rel-entity rel-cols "Entity")
       (when (not= (count base-cols) (count rel-cols))
-        (u/throw-format-msg "Column count must be the same: %s %s"
-                            (pr-str base-cols) (pr-str rel-cols)))
+        (u/throw-str "Column count must be the same: "
+                     (pr-str base-cols) " " (pr-str rel-cols)))
       (adis base-cols)
       (adis rel-cols)))
   relmap)
@@ -405,8 +405,8 @@
   (um/when-assert
    (doseq [each eis]
      (when-not (entity-instance-or-coll? each)
-       (u/throw-format-msg
-        "Expected entity instance or collection of entity instances but found %s"
+       (u/throw-str
+        "Expected entity instance or collection of entity instances but found "
         (pr-str each))))
    (let [duplicate-entities (->> eis
                                  (map get-instance-or-coll-entity)
@@ -414,8 +414,8 @@
                                  (filter #(> (val %) 1))
                                  (map key))]
      (when (seq duplicate-entities)
-       (u/throw-format-msg "Found duplicate instances/collections of entities: %s"
-                           (pr-str duplicate-entities)))))
+       (u/throw-str "Found duplicate instances/collections of entities: "
+                    (pr-str duplicate-entities)))))
   (let [ephmap (get-ephmap template)]
     (reduce
      (fn [m ei-or-coll]
@@ -437,7 +437,7 @@
                                                         (map #(get % eick))
                                                         vec))]))
                            (apply array-map))
-                      (u/throw-format-msg "Unrelated entities: %s and %s"
-                                          (pr-str ei-e te))))))
+                      (u/throw-str "Unrelated entities: "
+                                   (pr-str ei-e) " and " (pr-str te))))))
              {} ephmap))))
      {} eis)))

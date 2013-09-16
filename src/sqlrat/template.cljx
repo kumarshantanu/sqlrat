@@ -14,11 +14,11 @@
                   (um/verify (seq tokens) "Empty token collection")]}
   (um/when-assert
    (when-not ((some-fn string? symbol?) (first tokens))
-     (u/throw-format-msg "Expected first token to be string/symbol but found %s"
-                         (pr-str (first tokens))))
+     (u/throw-str "Expected first token to be string/symbol but found "
+                  (pr-str (first tokens))))
    (when-not (every? (some-fn string? symbol? keyword?) (rest tokens))
-     (u/throw-format-msg "Expected tokens to be string/symbol/keyword but found %s"
-                         (pr-str tokens))))
+     (u/throw-str "Expected tokens to be string/symbol/keyword but found "
+                  (pr-str tokens))))
   (->> tokens
        (concat [{} {}])
        vec))
@@ -135,10 +135,11 @@
                   (some #(not (contains? args %)) expected-ks))
           (let [supplied-ss (set (filter symbol? (keys args)))
                 supplied-ks (set (filter keyword? (keys args)))]
-            (u/throw-format-msg
-             "Missing args: %s, surplus args: %s"
+            (u/throw-str
+             "Missing args: "
              (pr-str (concat (sort (set/difference expected-ks supplied-ks))
                              (sort (set/difference expected-ss supplied-ss))))
+             ", surplus args: "
              (pr-str (concat (sort (set/difference supplied-ks expected-ks))
                              (sort (set/difference supplied-ss expected-ss))))))))
        ;; substitute the values

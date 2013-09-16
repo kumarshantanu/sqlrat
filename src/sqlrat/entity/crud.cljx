@@ -15,8 +15,7 @@
     (case sx
       "and" "AND"
       "or" "OR"
-      (u/throw-format-msg "Expected operator \"AND\" or \"OR\" but found %s"
-                          (pr-str x)))))
+      (u/throw-str "Expected operator \"AND\" or \"OR\" but found " (pr-str x)))))
 
 
 ;; ===== Assertion helpers =====
@@ -31,15 +30,15 @@
 (defn assert-iden
   [x xname] {:pre [(um/verify (string? xname) xname)]}
   (when-not (db-iden? x)
-    (u/throw-format-msg "Expected %s to be symbol or string, but found %s"
-                        xname (pr-str x))))
+    (u/throw-str "Expected " xname " to be symbol or string, but found "
+                 (pr-str x))))
 
 
 (defn assert-every-iden
   [xs xname] {:pre [(um/verify (seq xs) xs) (um/verify (string? xname) xname)]}
   (when-not (every? db-iden? xs)
-    (u/throw-format-msg "Expected every %s to be symbol or string, but found %s"
-                        xname (pr-str (remove db-iden? xs)))))
+    (u/throw-str "Expected every " xname " to be symbol or string, but found "
+                 (pr-str (remove db-iden? xs)))))
 
 
 (defn not-symbol?
@@ -50,16 +49,16 @@
 (defn assert-every-val
   [xs xname] {:pre [(um/verify (seq xs) xs) (um/verify (string? xname) xname)]}
   (when-not (every? not-symbol? xs)
-    (u/throw-format-msg
-     "Expected every %s to be a value or placeholder keyword, but found %s"
-     xname (pr-str (remove not-symbol? xs)))))
+    (u/throw-str "Expected every " xname
+                 " to be a value or placeholder keyword, but found "
+                 (pr-str (remove not-symbol? xs)))))
 
 
 (defn assert-and-or
   [x]
   (if-let [y (and-or x)]
     y
-    (u/throw-format-msg "Expected AND or OR but found %s" (pr-str x))))
+    (u/throw-str "Expected AND or OR but found " (pr-str x))))
 
 
 (defn assert-table-colnames-colvals
@@ -69,9 +68,8 @@
    (assert-every-iden colnames "column name")
    (assert-every-val colvals "column value")
    (when (not= (count colnames) (count colvals))
-     (u/throw-format-msg
-      "Expected same number of colnames (%d) and colvals (%d)"
-      (count colnames) (count colvals)))))
+     (u/throw-str "Expected same number of colnames (" (count colnames)
+      ") and colvals (" (count colvals) ")"))))
 
 
 ;; ===== Clause helpers =====
@@ -102,9 +100,9 @@
      (ireduce (fn [idx x] (if (symbol? x)
                            (if-let [cn (get argmap x)]
                              [{x (f cn)} x]
-                             (u/throw-format-msg
-                              "No column-name for column-symbol %s in %s"
-                              (pr-str x) (pr-str argmap)))
+                             (u/throw-str "No column-name for column-symbol "
+                                          (pr-str x) " in "
+                                          (pr-str argmap)))
                            (let [sym (iden-sym x)] [{sym (f x)} sym])))
               colnames))
   ([colnames] {:pre [(um/verify (every? db-iden? colnames) colnames)]}
@@ -174,7 +172,7 @@
   [qualifier] {:pre [(um/verify (db-iden? qualifier) qualifier)]}
   (fn [iden]
     (when (nil? iden)
-      (u/throw-format-msg "Expected valid identifier but found nil"))
+      (u/throw-str "Expected valid identifier but found nil"))
     (cons qualifier (u/as-vector iden))))
 
 
@@ -269,8 +267,8 @@
        (assert-iden alias "table alias")
        (let [aliases (map second join-clauses)]
          (when-not (some (partial = from-alias) aliases)
-           (u/throw-format-msg "Alias %s is not among given aliases %s"
-                               (pr-str from-alias) (pr-str aliases)))))
+           (u/throw-str "Alias " (pr-str from-alias)
+                        " is not among given aliases " (pr-str aliases)))))
       (-> [(str "SELECT" (if distinct-rows " DISTINCT" ""))]
           (concat (interpose "," colsyms))
           (concat (if (> (count join-clauses) 1) ["FROM" table alias] ["FROM" table]))

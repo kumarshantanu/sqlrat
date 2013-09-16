@@ -6,10 +6,11 @@
   (throw (new #+clj Exception #+cljs js/Error msg)))
 
 
-(defn throw-format-msg
-  [fmt & args] {:pre [(string? fmt)]}
-  (-> (apply format fmt args)
-      throw-error-msg))
+(defn throw-str
+  [& args]
+  (->> args
+       (apply str)
+       throw-error-msg))
 
 
 (defn as-string
