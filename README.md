@@ -185,16 +185,16 @@ TODO
 ### Running tests
 
 ```bash
-lein 1.4 test  # test with Clojure 1.4
-lein dev test  # test with Clojure 1.5 and ClojureScript
-lein clr test  # test with ClojureCLR (env var CLJCLR14_40 should be defined)
+lein cascade test1.4  # test with Clojure 1.4
+lein cascade testdev  # test with Clojure 1.5 and ClojureScript
+lein cascade testclr  # test with ClojureCLR (env var CLJCLR14_40 should be defined)
 ```
 
 ### Packaging a JAR
 
 ```bash
-lein pkg jar      # includes cljx, clj and cljs files into the JAR
-lein pkg install  # includes cljx, clj and cljs files into the JAR
+lein cascade pkg jar      # includes cljx, clj and cljs files into the JAR
+lein cascade pkg install  # includes cljx, clj and cljs files into the JAR
 ```
 
 ## License
