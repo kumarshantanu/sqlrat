@@ -57,12 +57,11 @@
             :1889 [["with-profile" "1889,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
-            :dev [["with-profile" "1.5,jvm,jst" "test"]]
             :clr [["with-profile" "clr" "clr" "test"]]
             :jar [["with-profile" "pkg" "jar"]]
-            "1.4"  [:ccljx :1.4]
-            "dev"  [:ccljx :dev]
-            "clr"  [:ccljx :clr]
-            "test" [:ccljx :1.4 :1.5 :1847 :1853 :1859 :1877 :1885 :1889 :clr]
+            "test1.4"  [:ccljx :1.4]
+            "testdev"  [:ccljx :1.5 :1889]
+            "testclr"  [:ccljx :clr]
+            "testall" [:ccljx :1.4 :1.5 :1847 :1853 :1859 :1877 :1885 :1889 :clr]
             "jar"  [:ccljx :jar]})
 
