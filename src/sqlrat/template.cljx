@@ -117,16 +117,19 @@
 
 (defn realize
   "Realize a template and return a vector containing SQL string and arguments.
-  Supported `opts` keywords are :subst (arity-1 fn to substitute symbol value)
-  and :place (arity-2 fn to return placeholder string, typically '?')"
+  Supported `opts` keywords are:
+  :subst - fn [symbol] to substitute symbol value, typically with decorations
+  :place - fn [idx val] returns placeholder, typically '?'; val is always scalar
+  :xform - fn [key val] returns transformed val; val may be scalar or collection"
   ([t args opts] {:pre [(template? t)
                         (map? args)
                         (map? opts)]}
      (let [[p-args p-opts & tokens] t
            args (merge p-args args)
-           {:keys [subst place]
+           {:keys [subst place xform]
             :or {subst (fn [v] (str v))
-                 place (fn [idx v] "?")}} (merge p-opts opts)
+                 place (fn [idx v] "?")
+                 xform (fn [k v] v)}} (merge p-opts opts)
            expected-ss (set (filter symbol? tokens))
            expected-ks (set (filter keyword? tokens))]
        ;; error check
@@ -154,10 +157,11 @@
                    [xsqlvec xparams]
                    (cond (symbol? each)  [(it/render-symbol sqlvec subst v) params]
                          (keyword? each) (if (or (seq? v) (coll? v))
-                                           (it/expand-keyword place v sqlvec params)
+                                           (it/expand-keyword place xform each
+                                                              v sqlvec params)
                                            (let [idx (inc (count params))]
                                              [(conj sqlvec (place idx v))
-                                              (conj params v)]))
+                                              (conj params (xform each v))]))
                          :otherwise      [(conj sqlvec each) params])]
                (recur (rest tokens) xsqlvec xparams)))))))
   ([t args]
@@ -174,3 +178,35 @@
          (update-in [1] merge opts)))
   ([t args]
      (partial t args {})))
+
+
+(defn mock-xform
+  "Arity-2 `xform` fn that returns the keyword as the mock value. See `mock` and
+  `unmock`."
+  [k v]
+  (if (or (coll? v) (seq? v)) [k] k))
+
+
+(defn mock
+  "Realize a template with mock values using `:xform` option, such that `unmock`
+  can put actual values later. See `unmock`."
+  ([t args opts]
+     (realize t args (merge opts {:xform mock-xform})))
+  ([t args]
+     (realize t args {:xform mock-xform}))
+  ([t]
+     (realize t {} {:xform mock-xform})))
+
+
+(defn unmock
+  "Replace mock values with corresponding actual values in a mocked template.
+  See `mock`."
+  [t args] {:pre [(um/verify (coll? t) t)
+                  (um/verify (string? (first t)) t)]}
+  (->> (rest t)
+       (mapcat (fn [each] (if (contains? args each)
+                           (let [v (get args each)]
+                             (if (or (coll? v) (seq? v)) v [v]))
+                           (u/throw-str "No value found for " (str each)))))
+       (cons (first t))
+       doall))

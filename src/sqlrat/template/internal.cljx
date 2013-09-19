@@ -32,8 +32,8 @@
 
 (defn expand-keyword
   "Return vector containing SQL tokens vector and params"
-  [place coll sqlvec params] {:pre [(um/verify (u/only-coll? coll) coll)
-                                    (um/verify (vector? sqlvec) sqlvec)]}
+  [place xform kw coll sqlvec params] {:pre [(um/verify (u/only-coll? coll) coll)
+                                             (um/verify (vector? sqlvec) sqlvec)]}
   (let [idxs (iterate inc (inc (count params)))]
     [(->> (map place idxs coll) comma-separated (conj sqlvec))
-     (vec (concat params coll))]))
+     (vec (concat params (xform kw coll)))]))
