@@ -4,12 +4,12 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[com.keminglabs/cljx "0.3.0"]
-            [lein-clr     "0.2.0"]
+            [lein-clr     "0.2.1"]
             [lein-cascade "0.1.1"]]
   :clr {:cmd-templates {:clj-url "http://sourceforge.net/projects/clojureclr/files/clojure-clr-1.4.1-Debug-4.0.zip/download"
                         :clj-zip "clojure-clr-1.4.1-Debug-4.0.zip"
-                        :clj-dep [#_"mono" ["target/clr/clj/Debug 4.0" %1]]
-                        :clj-exe [#_"mono" [CLJCLR14_40 %1]]
+                        :clj-dep [[?PATH "mono"] ["target/clr/clj/Debug 4.0" %1]]
+                        :clj-exe [[?PATH "mono"] [CLJCLR14_40 %1]]
                         :wget    ["wget" "--no-check-certificate" "--no-clobber" "-O" %1 %2]
                         :unzip   ["unzip" "-d" %1 %2]}
         :deps-cmds [;[:wget  :clj-zip :clj-url]
