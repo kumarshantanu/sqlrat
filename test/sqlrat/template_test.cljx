@@ -128,25 +128,25 @@
                "SELECT * FROM" 'table "WHERE" 'token "=" :emp-code)
            [{'table "emp" 'token "emp_code" :emp-code 10} {}
             "SELECT * FROM emp WHERE emp_code =" :emp-code]) "does not realize keywords"))
-  (testing "mock realization"
+  (testing "stub realization"
     (testing "single parameter"
       (let [t (core/make-template ["SELECT * FROM emp WHERE e_code =" :e-code])
-            m (core/mock t {:e-code 10})
-            u (core/unmock m {:e-code 20})]
+            m (core/stub t {:e-code 10})
+            u (core/fill m {:e-code 20})]
         (is (= [{} {} "SELECT * FROM emp WHERE e_code =" :e-code] t))
         (is (= ["SELECT * FROM emp WHERE e_code = ?" :e-code] m))
         (is (= ["SELECT * FROM emp WHERE e_code = ?" 20] u))))
     (testing "multiple parameters"
       (let [t (core/make-template ["WHERE e_code =" :e-code "AND dept_code =" :dept-code])
-            m (core/mock t {:e-code 10 :dept-code 20})
-            u (core/unmock m {:e-code 30 :dept-code 40})]
+            m (core/stub t {:e-code 10 :dept-code 20})
+            u (core/fill m {:e-code 30 :dept-code 40})]
         (is (= [{} {} "WHERE e_code =" :e-code "AND dept_code =" :dept-code] t))
         (is (= ["WHERE e_code = ? AND dept_code = ?" :e-code :dept-code] m))
         (is (= ["WHERE e_code = ? AND dept_code = ?" 30 40] u))))
     (testing "multi-value parameter"
       (let [t (core/make-template ["WHERE e_code IN (" :e-code ")"])
-            m (core/mock t {:e-code [10 20 30]})
-            u (core/unmock m {:e-code [30 40 50]})]
+            m (core/stub t {:e-code [10 20 30]})
+            u (core/fill m {:e-code [30 40 50]})]
         (is (= [{} {} "WHERE e_code IN (" :e-code ")"] t))
         (is (= ["WHERE e_code IN ( ?, ?, ? )" :e-code] m))
         (is (= ["WHERE e_code IN ( ?, ?, ? )" 30 40 50] u))))))
@@ -179,13 +179,13 @@
       (is (thrown-with-msg?
            #+clj Exception #+cljs js/Error
            #"Missing args: \(:e-code\), surplus args: \(\)"
-           (core/mock t {}))))
+           (core/stub t {}))))
     (let [t (core/make-template ["SELECT * FROM emp WHERE e_code =" :e-code])
-          m (core/mock t {:e-code 10})]
+          m (core/stub t {:e-code 10})]
       (is (thrown-with-msg?
            #+clj Exception #+cljs js/Error
            #"No value found for :e-code"
-           (core/unmock m {}))))))
+           (core/fill m {}))))))
 
 
 (deftemplate one ["SELECT * FROM" 'table "WHERE" 'id "=" :id])
@@ -199,16 +199,3 @@
            ["SELECT * FROM emp WHERE emp_id = ?" 10]))
     (is (= (core/realize two {:id 10} {})
            ["SELECT * FROM emp WHERE emp_id = ?" 10]))))
-
-
-;; #+clj (def r-one '#sqlrat/template ["SELECT * FROM" table "WHERE" id "=" :id])
-
-;; #+clj (def r-two #sqlrat/template "SELECT * FROM emp WHERE emp_id = :id")
-
-
-;; #+clj (deftest test-template-reader
-;;         (testing "#sqlrat/template"
-;;           (is (= (core/realize r-one {'table "emp" 'id "emp_id" :id 10} {})
-;;                  ["SELECT * FROM emp WHERE emp_id = ?" 10]))
-;;           (is (= (core/realize r-two {:id 10} {})
-;;                  ["SELECT * FROM emp WHERE emp_id = ?" 10]))))

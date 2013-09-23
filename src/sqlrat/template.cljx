@@ -180,27 +180,27 @@
      (partial t args {})))
 
 
-(defn mock-xform
-  "Arity-2 `xform` fn that returns the keyword as the mock value. See `mock` and
-  `unmock`."
+(defn stub-xform
+  "Arity-2 `xform` fn that returns the keyword as stubbed value. See `stub` and
+  `fill`."
   [k v]
   (if (or (coll? v) (seq? v)) [k] k))
 
 
-(defn mock
-  "Realize a template with mock values using `:xform` option, such that `unmock`
-  can put actual values later. See `unmock`."
+(defn stub
+  "Realize a template with mock values using `:xform` option, such that `fill`
+  can put actual values later. See `fill`."
   ([t args opts]
-     (realize t args (merge opts {:xform mock-xform})))
+     (realize t args (merge opts {:xform stub-xform})))
   ([t args]
-     (realize t args {:xform mock-xform}))
+     (realize t args {:xform stub-xform}))
   ([t]
-     (realize t {} {:xform mock-xform})))
+     (realize t {} {:xform stub-xform})))
 
 
-(defn unmock
-  "Replace mock values with corresponding actual values in a mocked template.
-  See `mock`."
+(defn fill
+  "Replace mock values with corresponding actual values in a stubbed template.
+  See `stub`."
   [t args] {:pre [(um/verify (coll? t) t)
                   (um/verify (string? (first t)) t)]}
   (->> (rest t)
