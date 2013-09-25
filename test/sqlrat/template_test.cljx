@@ -30,28 +30,6 @@
     (is (= (pt "WHERE a=:b+1") [{} {} "WHERE a=" :b "+1"]))))
 
 
-(defn ct
-  [& tokens]
-  (let [t (core/make-template (butlast tokens))]
-    (core/realize-syms t (last tokens))))
-
-
-(deftest happy-contraction
-  (testing "no keys"
-    (is (= (ct "SELECT * FROM emp" {}) [{} {} "SELECT * FROM emp"]))
-    (is (= (ct "SELECT * FROM" 'table {'table "emp"})
-           [{'table "emp"} {} "SELECT * FROM emp"]))
-    (is (= (ct "FROM" 'table "LIMIT 1" {'table "emp"})
-           [{'table "emp"} {} "FROM emp LIMIT 1"]))
-    (is (= (ct "FROM" 't1 "," 't2 {'t1 "emp" 't2 "dept"})
-           [{'t1 "emp" 't2 "dept"} {} "FROM emp , dept"])))
-  (testing "with keys"
-    (is (= (ct "FROM" 't "WHERE sum=" :s {'t "emp" :s 10})
-           [{'t "emp" :s 10} {} "FROM emp WHERE sum=" :s]))
-    (is (= (ct "FROM emp WHERE gender=" :g "AND age=" :a {:a 30 :g "M"})
-           [{:a 30 :g "M"} {} "FROM emp WHERE gender=" :g "AND age=" :a]))))
-
-
 (defn rt
   [& tokens]
   (let [t (core/make-template (butlast tokens))]
@@ -62,12 +40,6 @@
   [args opts & tokens]
   (let [t (core/make-template tokens)]
     (core/realize t args opts)))
-
-
-(defn sst
-  [args opts & tokens]
-  (let [t (core/make-template tokens)]
-    (core/realize-syms t args opts)))
 
 
 (deftest happy
@@ -115,19 +87,6 @@
                  "SELECT * FROM emp WHERE emp_age >" :emp-age "AND gender =" :gender)
              ["SELECT * FROM emp WHERE emp_age > @param1 AND gender = @param2" 34 "M"])
          "placeholder decoration with index"))
-  (testing "partial (only symbol substitution) realization"
-    (is (= (sst {'table "emp" 'token "emp_code"} {}
-               "SELECT" 'token "FROM" 'table)
-           [{'table "emp" 'token "emp_code"} {}
-            "SELECT emp_code FROM emp"]) "ordinary template with symbols only")
-    (is (= (sst {'table "emp" 'token "emp_code"} {}
-               "SELECT * FROM" 'table "WHERE" 'token "=" :emp-code)
-           [{'table "emp" 'token "emp_code"} {}
-            "SELECT * FROM emp WHERE emp_code =" :emp-code]) "no error on missing keywords")
-    (is (= (sst {'table "emp" 'token "emp_code" :emp-code 10} {}
-               "SELECT * FROM" 'table "WHERE" 'token "=" :emp-code)
-           [{'table "emp" 'token "emp_code" :emp-code 10} {}
-            "SELECT * FROM emp WHERE emp_code =" :emp-code]) "does not realize keywords"))
   (testing "stub realization"
     (testing "single parameter"
       (let [t (core/make-template ["SELECT * FROM emp WHERE e_code =" :e-code])

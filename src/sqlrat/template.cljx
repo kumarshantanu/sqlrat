@@ -50,38 +50,6 @@
       (make-template sql-or-tokens)))
 
 
-(defn realize-syms
-  "Partially realize template for symbols only and return the template."
-  ([t args opts] {:pre [(template? t)
-                        (map? args)
-                        (map? opts)]}
-     (let [[p-args p-opts & tokens] t
-           args (merge p-args args)
-           {:keys [subst]
-            :or {subst (fn [v] (str v))}
-            :as m-opts} (merge p-opts opts)]
-       ;; substitute the values
-       (let [args (zipmap (keys args) (map #(if (fn? %) (%) %) (vals args)))]
-         (loop [tokens tokens
-                sqlvec []]
-           (if (empty? tokens)
-             (->> sqlvec
-                  (concat [args m-opts])
-                  vec)
-             (let [each (first tokens)
-                   svec (cond
-                         ;; symbol
-                         (and (symbol? each) (contains? args each))
-                         (it/render-symbol sqlvec subst (get args each))
-                         ;; string
-                         (string? each) (it/sqlvec-conj sqlvec each)
-                         :otherwise
-                         (conj sqlvec each))]
-               (recur (rest tokens) svec)))))))
-  ([t args]
-     (realize-syms t args {})))
-
-
 (defn dollar-place
   "Arity-2 place fn for some Node.js libraries"
   [idx x]
