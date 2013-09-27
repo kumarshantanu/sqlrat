@@ -29,6 +29,7 @@
              :1877 {:dependencies [[org.clojure/clojurescript "0.0-1877"]]}
              :1885 {:dependencies [[org.clojure/clojurescript "0.0-1885"]]}
              :1889 {:dependencies [[org.clojure/clojurescript "0.0-1889"]]}
+             :1909 {:dependencies [[org.clojure/clojurescript "0.0-1909"]]}
              :jst {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]]
                    :plugins [[lein-cljsbuild "0.3.3"]]
                    :hooks [leiningen.cljsbuild]
@@ -55,13 +56,14 @@
             :1877 [["with-profile" "1877,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :1885 [["with-profile" "1885,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :1889 [["with-profile" "1889,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1909 [["with-profile" "1909,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :clr [["with-profile" "clr" "clr" "test"]]
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
-            "testdev" [:ccljx :1.5 :1889]
+            "testdev" [:ccljx :1.5 :1909]
             "testclr" [:ccljx :clr]
-            "testall" [:ccljx :1.4 :1.5 :1847 :1853 :1859 :1877 :1885 :1889 :clr]
+            "testall" [:ccljx :1.4 :1.5 :1847 :1853 :1859 :1877 :1885 :1889 :1909 :clr]
             "pkg"     [:ccljx :pkg]})
 
