@@ -184,10 +184,17 @@ TODO
 
 ### Running tests
 
+You should have the following installed to run tests:
+
+* PhantomJS - http://phantomjs.org/
+* SlimerJS - http://slimerjs.org/
+* .NET 4.0 SDK or Mono - http://mono-project.com/
+
 ```bash
 lein cascade test1.4  # test with Clojure 1.4
 lein cascade testdev  # test with Clojure 1.5 and ClojureScript
 lein cascade testclr  # test with ClojureCLR (env var CLJCLR14_40 should be defined)
+lein cascade testall  # run all the tests
 ```
 
 ### Packaging a JAR
