@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[com.keminglabs/cljx "0.3.0"]
             [lein-clr     "0.2.1"]
-            [lein-cascade "0.1.1"]]
+            [lein-cascade "0.1.2"]]
   :clr {:cmd-templates {:clj-url "http://sourceforge.net/projects/clojureclr/files/clojure-clr-1.4.1-Debug-4.0.zip/download"
                         :clj-zip "clojure-clr-1.4.1-Debug-4.0.zip"
                         :clj-dep [[?PATH "mono"] ["target/clr/clj/Debug 4.0" %1]]
@@ -33,7 +33,7 @@
              :1913 {:dependencies [[org.clojure/clojurescript "0.0-1913"]]}
              :1933 {:dependencies [[org.clojure/clojurescript "0.0-1933"]]}
              :1934 {:dependencies [[org.clojure/clojurescript "0.0-1934"]]}
-             :jst {:plugins [[lein-cljsbuild "0.3.3"]
+             :jst {:plugins [[lein-cljsbuild "0.3.4"]
                              [com.cemerick/clojurescript.test "0.1.0"]]
                    :hooks [leiningen.cljsbuild]
                    :cljsbuild {:builds [{:source-paths ["target/generated/cljs" "target/generated/test-cljs"]
