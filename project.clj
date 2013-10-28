@@ -3,7 +3,7 @@
   :url "https://github.com/kumarshantanu/sqlrat"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :plugins [[com.keminglabs/cljx "0.3.0"]
+  :plugins [[com.keminglabs/cljx "0.3.1"]
             [lein-clr     "0.2.1"]
             [lein-cascade "0.1.2"]]
   :clr {:cmd-templates {:clj-url "http://sourceforge.net/projects/clojureclr/files/clojure-clr-1.4.1-Debug-4.0.zip/download"
@@ -33,7 +33,8 @@
              :1913 {:dependencies [[org.clojure/clojurescript "0.0-1913"]]}
              :1933 {:dependencies [[org.clojure/clojurescript "0.0-1933"]]}
              :1934 {:dependencies [[org.clojure/clojurescript "0.0-1934"]]}
-             :jst {:plugins [[lein-cljsbuild "0.3.4"]
+             :1978 {:dependencies [[org.clojure/clojurescript "0.0-1978"]]}
+             :jst {:plugins [[lein-cljsbuild "1.0.0-SNAPSHOT"]
                              [com.cemerick/clojurescript.test "0.1.0"]]
                    :hooks [leiningen.cljsbuild]
                    :cljsbuild {:builds [{:source-paths ["target/generated/cljs" "target/generated/test-cljs"]
@@ -64,13 +65,14 @@
             :1913 [["with-profile" "1913,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :1933 [["with-profile" "1933,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :1934 [["with-profile" "1934,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1978 [["with-profile" "1978,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :clr [["with-profile" "clr" "clr" "test"]]
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
-            "testdev" [:ccljx :1.5 :1934]
+            "testdev" [:ccljx :1.5 :1978]
             "testclr" [:ccljx :clr]
-            "testall" [:ccljx :1.4 :1.5 :1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934 :clr]
+            "testall" [:ccljx :1.4 :1.5 :1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934 :1978 :clr]
             "pkg"     [:ccljx :pkg]})
 
