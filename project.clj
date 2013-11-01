@@ -45,6 +45,7 @@
                                                "tests-slimer"  ["slimerjs" :runner "target/cljs/testable.js"]}}}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
+             :1.6 {:dependencies [[org.clojure/clojure "1.6.0-alpha1"]]}
              :jvm {:test-paths ["test-clj"]}
              :clr {:test-paths [#_"test-clj"]} ; tagged readers fail on CLR
              :pkg {:source-paths ["target/generated/cljs"]}}
@@ -68,11 +69,13 @@
             :1978 [["with-profile" "1978,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
+            :1.6 [["with-profile" "1.6,jvm" "test"]]
             :clr [["with-profile" "clr" "clr" "test"]]
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
             "testdev" [:ccljx :1.5 :1978]
+            "testjvm" [:ccljx :1.4 :1.5 :1.6]
             "testclr" [:ccljx :clr]
-            "testall" [:ccljx :1.4 :1.5 :1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934 :1978 :clr]
+            "testall" [:ccljx :1.4 :1.5 :1.6 :1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934 :1978 :clr]
             "pkg"     [:ccljx :pkg]})
 
