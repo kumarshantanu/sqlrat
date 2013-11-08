@@ -46,7 +46,7 @@
                                                "tests-slimer"  ["slimerjs" :runner "target/cljs/testable.js"]}}}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
-             :1.6 {:dependencies [[org.clojure/clojure "1.6.0-alpha1"]]}
+             :1.6 {:dependencies [[org.clojure/clojure "1.6.0-alpha2"]]}
              :jvm {:test-paths ["test-clj"]}
              :clr {:test-paths [#_"test-clj"]} ; tagged readers fail on CLR
              :pkg {:source-paths ["target/generated/cljs"]}}
