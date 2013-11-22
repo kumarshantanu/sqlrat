@@ -35,8 +35,13 @@
              :1934 {:dependencies [[org.clojure/clojurescript "0.0-1934"]]}
              :1978 {:dependencies [[org.clojure/clojurescript "0.0-1978"]]}
              :2014 {:dependencies [[org.clojure/clojurescript "0.0-2014"]]}
-             :jst {:plugins [[lein-cljsbuild "1.0.0-alpha1"]
-                             [com.cemerick/clojurescript.test "0.1.0"]]
+             :2024 {:dependencies [[org.clojure/clojurescript "0.0-2024"]]}
+             :2030 {:dependencies [[org.clojure/clojurescript "0.0-2030"]]}
+             :2060 {:dependencies [[org.clojure/clojurescript "0.0-2060"]]}
+             :2067 {:dependencies [[org.clojure/clojurescript "0.0-2067"]]}
+             :cb1 {:plugins [[lein-cljsbuild "1.0.0-alpha1"]]}
+             :cb2 {:plugins [[lein-cljsbuild "1.0.0"]]}
+             :jst {:plugins [[com.cemerick/clojurescript.test "0.1.0"]]
                    :hooks [leiningen.cljsbuild]
                    :cljsbuild {:builds [{:source-paths ["target/generated/cljs" "target/generated/test-cljs"]
                                          :compiler {:output-to "target/cljs/testable.js"
@@ -57,26 +62,32 @@
   :cascade {:clean [["clean"]]
             :cljx  [["cljx" "once"]]
             :ccljx [:clean :cljx]
-            :1847 [["with-profile" "1847,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1853 [["with-profile" "1853,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1859 [["with-profile" "1859,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1877 [["with-profile" "1877,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1885 [["with-profile" "1885,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1889 [["with-profile" "1889,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1909 [["with-profile" "1909,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1913 [["with-profile" "1913,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1933 [["with-profile" "1933,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1934 [["with-profile" "1934,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :1978 [["with-profile" "1978,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2014 [["with-profile" "2014,jst" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :cljs [:1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934 :1978 :2014]
+            :1847 [["with-profile" "1847,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1853 [["with-profile" "1853,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1859 [["with-profile" "1859,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1877 [["with-profile" "1877,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1885 [["with-profile" "1885,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1889 [["with-profile" "1889,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1909 [["with-profile" "1909,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1913 [["with-profile" "1913,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1933 [["with-profile" "1933,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1934 [["with-profile" "1934,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :1978 [["with-profile" "1978,jst,cb1" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :2014 [["with-profile" "2014,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :2024 [["with-profile" "2024,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :2030 [["with-profile" "2030,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :2060 [["with-profile" "2060,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :2067 [["with-profile" "2067,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :cljs [:1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934
+                   :1978 :2014 #_:2024 #_:2030  ; tests fail in 2024 and 2030 due to array-map
+                   :2060 :2067]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :1.6 [["with-profile" "1.6,jvm" "test"]]
             :clr [["with-profile" "clr" "clr" "test"]]
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
-            "testdev" [:ccljx :1.5 :1978]
+            "testdev" [:ccljx :1.5 :2067]
             "testjvm" [:ccljx :1.4 :1.5 :1.6]
             "testclr" [:ccljx :clr]
             "testjs"  [:ccljx :cljs]
