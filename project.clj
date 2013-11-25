@@ -9,7 +9,7 @@
   :clr {:cmd-templates {:clj-url "http://sourceforge.net/projects/clojureclr/files/clojure-clr-1.4.1-Debug-4.0.zip/download"
                         :clj-zip "clojure-clr-1.4.1-Debug-4.0.zip"
                         :clj-dep [[?PATH "mono"] ["target/clr/clj/Debug 4.0" %1]]
-                        :clj-exe [[?PATH "mono"] [CLJCLR14_40 %1]]
+                        ;; :clj-exe is defined in 1.4 and 1.5 profiles
                         :wget    ["wget" "--no-check-certificate" "--no-clobber" "-O" %1 %2]
                         :unzip   ["unzip" "-d" %1 %2]}
         :deps-cmds [;[:wget  :clj-zip :clj-url]
@@ -55,12 +55,12 @@
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :1.6 {:dependencies [[org.clojure/clojure "1.6.0-alpha3"]]}
              :jvm {:test-paths ["test-clj"]}
-             :clr {:test-paths [#_"test-clj"]} ; tagged readers fail on CLR
+             ;; Tagged literal tests fail on CLR, so commented out
+             :clr-1.4 {:clr {:cmd-templates {:clj-exe [[?PATH "mono"] [CLJCLR14_40 %1]]}}
+                       :test-paths [#_"test-clj"]}
+             :clr-1.5 {:clr {:cmd-templates {:clj-exe [[?PATH "mono"] [CLJCLR15_40 %1]]}}
+                       :test-paths [#_"test-clj"]}
              :pkg {:source-paths ["target/generated/cljs"]}}
-  ;; :aliases {"1.4" ["with-profile" "1.4" "do" "clean," "cljx" "once,"]
-  ;;           "dev" ["with-profile" "1.5,jst" "do" "clean," "cljx" "once,"]
-  ;;           "clr" ["do" "clean," "cljx" "once," "clr"]
-  ;;           "pkg" ["with-profile" "pkg" "do" "clean," "cljx" "once,"]}
   :cascade {:clean [["clean"]]
             :cljx  [["cljx" "once"]]
             :ccljx [:clean :cljx]
@@ -82,19 +82,21 @@
             :2067 [["with-profile" "2067,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :2075 [["with-profile" "2075,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :2080 [["with-profile" "2080,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :cljs [:1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934
-                   :1978 :2014 #_:2024 #_:2030  ; tests fail in 2024 and 2030 due to array-map
-                   :2060 :2067 :2075 :2080]
+            :cljs-all [:1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934
+                       :1978 :2014 #_:2024 #_:2030  ; tests fail in 2024, 2030 due to array-map
+                       :2060 :2067 :2075 :2080]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :1.6 [["with-profile" "1.6,jvm" "test"]]
-            :clr [["with-profile" "clr" "clr" "test"]]
+            :clj-all [:1.4 :1.5 :1.6]
+            :clr-1.4 [:ccljx ["with-profile" "clr-1.4" "clr" "-v" "test"]]
+            :clr-1.5 [:ccljx ["with-profile" "clr-1.5" "clr" "-v" "test"]]
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
             "testdev" [:ccljx :1.5 :2080]
-            "testjvm" [:ccljx :1.4 :1.5 :1.6]
-            "testclr" [:ccljx :clr]
-            "testjs"  [:ccljx :cljs]
-            "testall" [:ccljx :1.4 :1.5 :1.6 :cljs :clr]
+            "testjvm" [:ccljx :clj-all]
+            "testclr" [:clr-1.4 :clr-1.5]
+            "testjs"  [:ccljx :cljs-all]
+            "testall" [:ccljx :clj-all :cljs-all "testclr"]
             "pkg"     [:ccljx :pkg]})
 
