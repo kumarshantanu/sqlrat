@@ -59,7 +59,7 @@
              :clr-1.4 {:clr {:cmd-templates {:clj-exe [[?PATH "mono"] [CLJCLR14_40 %1]]}}
                        :test-paths [#_"test-clj"]}
              :clr-1.5 {:clr {:cmd-templates {:clj-exe [[?PATH "mono"] [CLJCLR15_40 %1]]}}
-                       :test-paths [#_"test-clj"]}
+                       :test-paths ["test-clj"]}
              :pkg {:source-paths ["target/generated/cljs"]}}
   :cascade {:clean [["clean"]]
             :cljx  [["cljx" "once"]]
@@ -89,8 +89,8 @@
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :1.6 [["with-profile" "1.6,jvm" "test"]]
             :clj-all [:1.4 :1.5 :1.6]
-            :clr-1.4 [:ccljx ["with-profile" "clr-1.4" "clr" "-v" "test"]]
-            :clr-1.5 [:ccljx ["with-profile" "clr-1.5" "clr" "-v" "test"]]
+            :clr-1.4 [:ccljx ["with-profile" "clr-1.4" "clr" "test"]]
+            :clr-1.5 [:ccljx ["with-profile" "clr-1.5" "clr" "test"]]
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
             "testdev" [:ccljx :1.5 :2080]
