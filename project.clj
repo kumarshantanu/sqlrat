@@ -41,6 +41,7 @@
              :2067 {:dependencies [[org.clojure/clojurescript "0.0-2067"]]}
              :2075 {:dependencies [[org.clojure/clojurescript "0.0-2075"]]}
              :2080 {:dependencies [[org.clojure/clojurescript "0.0-2080"]]}
+             :2120 {:dependencies [[org.clojure/clojurescript "0.0-2120"]]}
              :cb1 {:plugins [[lein-cljsbuild "1.0.0-alpha1"]]}
              :cb2 {:plugins [[lein-cljsbuild "1.0.0"]]}
              :jst {:plugins [[com.cemerick/clojurescript.test "0.1.0"]]
@@ -82,9 +83,10 @@
             :2067 [["with-profile" "2067,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :2075 [["with-profile" "2075,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :2080 [["with-profile" "2080,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :2120 [["with-profile" "2120,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :cljs-all [:1847 :1853 :1859 :1877 :1885 :1889 :1909 :1913 :1933 :1934
                        :1978 :2014 #_:2024 #_:2030  ; tests fail in 2024, 2030 due to array-map
-                       :2060 :2067 :2075 :2080]
+                       :2060 :2067 :2075 :2080 :2120]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :1.6 [["with-profile" "1.6,jvm" "test"]]
@@ -93,7 +95,7 @@
             :clr-1.5 [:ccljx ["with-profile" "clr-1.5" "clr" "test"]]
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
-            "testdev" [:ccljx :1.5 :2080]
+            "testdev" [:ccljx :1.5 :2120]
             "testjvm" [:ccljx :clj-all]
             "testclr" [:clr-1.4 :clr-1.5]
             "testjs"  [:ccljx :cljs-all]
