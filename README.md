@@ -131,7 +131,7 @@ database entity metadata. You can define them as follows:
 
 (defentity BlogPost {:table "post" :id [:post-id]}  ; :id is primary key col
   :post-id {:insert? false}  ; column won't be included in INSERT statement
-  :content {:colname "post"} ; column name rendered as 'post' in SQL
+  :content {:colname "data"} ; column name rendered as 'data' in SQL
   :active  {:default true}   ; default value is supplied in INSERT statement
   :created {:default ts-now} ; default value is obtained by executing fn
   :updated {:default ts-now})
@@ -147,7 +147,7 @@ a hand-crafted template.
 ```clojure
 (def ip (e/insert-row BlogPost))  ; returns a template
 (t/realize ip {:content "Foo bar"})
-;;=> ("INSERT INTO post ( post , active , created , updated ) VALUES ( ? , ? , ? , ? )"
+;;=> ("INSERT INTO post ( data , active , created , updated ) VALUES ( ? , ? , ? , ? )"
 ;;..  "Foo bar" true #inst "2013-09-09T12:40:52.765000000-00:00"
 ;;..  #inst "2013-09-09T12:40:52.765000000-00:00")
 ```
@@ -157,7 +157,7 @@ a hand-crafted template.
 ```clojure
 (def sp (e/find-by-id BlogPost))
 (t/realize sp {:post-id 10})
-;;=> ("SELECT post_id , post , active , created , updated FROM post WHERE post_id = ?" 10)
+;;=> ("SELECT post_id , data , active , created , updated FROM post WHERE post_id = ?" 10)
 ```
 
 See `sqlrat.entity/find-all` and `sqlrat.entity/find-where` for other options.
@@ -167,7 +167,7 @@ See `sqlrat.entity/find-all` and `sqlrat.entity/find-where` for other options.
 ```clojure
 (def up (e/update-by-id BlogPost (e/cols [:content])))
 (t/realize up {:post-id 10 :content "Foo bar baz"})
-;;=> ("UPDATE post SET post = ? WHERE post_id = ?" "Foo bar baz" 10)
+;;=> ("UPDATE post SET data = ? WHERE post_id = ?" "Foo bar baz" 10)
 ```
 
 **Compare-and-swap (optimistic locking)** operations with UPDATE can be done
@@ -177,7 +177,7 @@ with renamed columns:
 (def sp (e/update-where BlogPost [:post-id :created]
                         (e/cols {:content :content :created :new-created})))
 (t/realize sp {:post-id 10 :content "Foo bar baz quux" :created 9})
-;;=> ("UPDATE post SET post = ? , created = ? WHERE post_id = ? AND created = ?"
+;;=> ("UPDATE post SET data = ? , created = ? WHERE post_id = ? AND created = ?"
 ;;..  "Foo bar baz quux" #inst "2013-09-09T15:13:45.112000000-00:00" 10 9)
 ```
 
@@ -212,7 +212,7 @@ You should have the following installed to run tests:
 ```bash
 lein cascade test1.4  # test with Clojure 1.4
 lein cascade testdev  # test with Clojure 1.5 and ClojureScript
-lein cascade testclr  # test with ClojureCLR (env var CLJCLR14_40 should be defined)
+lein cascade testclr  # test with ClojureCLR (env var CLJCLR14_40 and CLJCLR15_40 should be defined)
 lein cascade testall  # run all the tests
 ```
 
