@@ -35,12 +35,14 @@ value _placeholders_. A simple template without any placeholder is as follows:
 (deftemplate r "SELECT * FROM emp WHERE dept_id = 10 AND active")
 ```
 
-Usually templates are created with placeholders. See sub-sections below.
+Simple templates would not be useful, so they are almost always created with
+placeholders. See sub-sections below.
 
 #### Keyword arguments as value placeholders
 
 Keyword arguments are value placeholders, used to realize the template into SQL
-string. The following generate the same template with keyword args `:dept-id`:
+string. All of the following generate the same template with keyword args
+`:dept-id`:
 
 ```clojure
 (def s (t/make-template ["SELECT * FROM emp WHERE dept_id =" :dept-id "AND act =" :act]))
@@ -68,7 +70,7 @@ Keywords can also act as multi-value placeholders, for example the following:
 ;;=> ("SELECT * FROM emp WHERE id IN ( ?, ?, ? )" 1 2 3)
 ```
 
-#### Symbol arguments as identifier placeholders
+#### Symbol arguments are identifier placeholders
 
 Templates also support symbol arguments as identifier placeholders:
 
@@ -87,7 +89,8 @@ Multi-values symbol arguments are joined using a default identifier delimiter.
 
 ##### Identifier decoration
 
-Should you want to quote the database identifiers, specify the `:subst` arity-1 (identifier-name) fn in options:
+Should you want to quote the database identifiers, specify the `:subst` arity-1
+(identifier-name) fn in options:
 
 ```clojure
 (t/realize t {'dept-col ["emp" "dept_id"] :dept-val 20} {:subst #(str "`" % "`")})
@@ -96,14 +99,17 @@ Should you want to quote the database identifiers, specify the `:subst` arity-1 
 
 #### Value placeholder decoration
 
-When using PostgreSQL, you may have to specially decorate the `?` placeholders for integers on the JVM:
+When using PostgreSQL, you may have to specially decorate the `?` placeholders
+for integers on the JVM:
 
 ```clojure
 (t/realize t {'dept-col "dept_id" :dept-val 20} {:place (t/pgsql-wrap-place)})
 ;;=> ("SELECT * FROM emp WHERE dept_id = ?::integer" 20)
 ```
 
-Unless you are on the JVM, you may not want the `?` placeholder in the rendered SQL - use a custom arity-2 (index and column-name) `:place` function
+Unless you are on the JVM (i.e. if you are using ClojureCLR or Node.js), you
+may not want the `?` placeholder in the rendered SQL - use a custom arity-2
+(index and column-name) `:place` function:
 
 ```clojure
 ;; for some Node.js database libraries
@@ -117,14 +123,15 @@ Unless you are on the JVM, you may not want the `?` placeholder in the rendered 
 
 ### Entity
 
-Writing templates for mundane CRUD jobs is tiring, which is where entities help. An entity represents a database entity metadata and can be defines as follows:
+Writing templates for mundane CRUD jobs is tiring. An entity represents a
+database entity metadata. You can define them as follows:
 
 ```clojure
 (defn ts-now [] (java.sql.Timestamp. (System/currentTimeMillis)))
 
-(defentity BlogPost {:table "post" :id [:post-id]}
+(defentity BlogPost {:table "post" :id [:post-id]}  ; :id is primary key col
   :post-id {:insert? false}  ; column won't be included in INSERT statement
-  :content {}
+  :content {:colname "post"} ; column name rendered as 'post' in SQL
   :active  {:default true}   ; default value is supplied in INSERT statement
   :created {:default ts-now} ; default value is obtained by executing fn
   :updated {:default ts-now})
@@ -132,14 +139,15 @@ Writing templates for mundane CRUD jobs is tiring, which is where entities help.
 
 #### CRUD operations
 
-A CRUD operation on an entity creates a template that you can realize just like a hand-crafted template.
+A CRUD operation on an entity creates a template that you can realize just like
+a hand-crafted template.
 
 ##### INSERT
 
 ```clojure
 (def ip (e/insert-row BlogPost))  ; returns a template
 (t/realize ip {:content "Foo bar"})
-;;=> ("INSERT INTO post ( content , active , created , updated ) VALUES ( ? , ? , ? , ? )"
+;;=> ("INSERT INTO post ( post , active , created , updated ) VALUES ( ? , ? , ? , ? )"
 ;;..  "Foo bar" true #inst "2013-09-09T12:40:52.765000000-00:00"
 ;;..  #inst "2013-09-09T12:40:52.765000000-00:00")
 ```
@@ -149,7 +157,7 @@ A CRUD operation on an entity creates a template that you can realize just like 
 ```clojure
 (def sp (e/find-by-id BlogPost))
 (t/realize sp {:post-id 10})
-;;=> ("SELECT post_id , content , active , created , updated FROM post WHERE post_id = ?" 10)
+;;=> ("SELECT post_id , post , active , created , updated FROM post WHERE post_id = ?" 10)
 ```
 
 See `sqlrat.entity/find-all` and `sqlrat.entity/find-where` for other options.
@@ -159,16 +167,17 @@ See `sqlrat.entity/find-all` and `sqlrat.entity/find-where` for other options.
 ```clojure
 (def up (e/update-by-id BlogPost (e/cols [:content])))
 (t/realize up {:post-id 10 :content "Foo bar baz"})
-;;=> ("UPDATE post SET content = ? WHERE post_id = ?" "Foo bar baz" 10)
+;;=> ("UPDATE post SET post = ? WHERE post_id = ?" "Foo bar baz" 10)
 ```
 
-**Compare-and-swap (optimistic locking)** operations with UPDATE can be done with renamed columns:
+**Compare-and-swap (optimistic locking)** operations with UPDATE can be done
+with renamed columns:
 
 ```clojure
 (def sp (e/update-where BlogPost [:post-id :created]
                         (e/cols {:content :content :created :new-created})))
 (t/realize sp {:post-id 10 :content "Foo bar baz quux" :created 9})
-;;=> ("UPDATE post SET content = ? , created = ? WHERE post_id = ? AND created = ?"
+;;=> ("UPDATE post SET post = ? , created = ? WHERE post_id = ? AND created = ?"
 ;;..  "Foo bar baz quux" #inst "2013-09-09T15:13:45.112000000-00:00" 10 9)
 ```
 
