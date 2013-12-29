@@ -16,36 +16,46 @@ Not on Clojars yet. Run `lein pkg install` to install locally and include `[sqlr
 (ns example
   (:require [sqlrat.template :as t]
             [sqlrat.entity :as e])
-;; Require macros for Clojure and ClojureCLR
+  ;; Require macros for Clojure and ClojureCLR
   (:require [sqlrat.macros :refer (deftemplate defentity)])
-;; Require macros for ClojureScript
+  ;; Require macros for ClojureScript
   (:require-macros '[sqlrat.macros :refer (deftemplate defentity)])
-;; other stuff
+  ;; other stuff
   ..)
 ```
 
 ### Template
 
-Templates are fundamental building blocks in _Sqlrat_ supporting identifier and value placeholders.
+Templates are fundamental building blocks in _Sqlrat_ supporting identifier and
+value _placeholders_. A simple template without any placeholder is as follows:
+
+```clojure
+(deftemplate r ["SELECT * FROM emp WHERE dept_id = 10 AND active"])
+;; same as above (string templates are automatically parsed)
+(deftemplate r "SELECT * FROM emp WHERE dept_id = 10 AND active")
+```
+
+Usually templates are created with placeholders. See sub-sections below.
 
 #### Keyword arguments as value placeholders
 
-All of the following define a var `s` to the **same template** (with keyword args `:dept-id` and `:active`):
+Keyword arguments are value placeholders, used to realize the template into SQL
+string. The following generate the same template with keyword args `:dept-id`:
 
 ```clojure
-(def s (t/make-template ["SELECT * FROM emp WHERE dept_id =" :dept-id "AND active =" :active]))
-(def s (t/parse-template "SELECT * FROM emp WHERE dept_id = :dept-id AND active = :active"))
-(def s #sqlrat/template ["SELECT * FROM emp WHERE dept_id =" :dept-id "AND active =" :active])
-(def s #sqlrat/template "SELECT * FROM emp WHERE dept_id = :dept-id AND active = :active")
-(deftemplate s ["SELECT * FROM emp WHERE dept_id =" :dept-id "AND active =" :active])
-(deftemplate s "SELECT * FROM emp WHERE dept_id = :dept-id AND active = :active")
+(def s (t/make-template ["SELECT * FROM emp WHERE dept_id =" :dept-id "AND act =" :act]))
+(def s (t/parse-template "SELECT * FROM emp WHERE dept_id = :dept-id AND act = :act"))
+(def s #sqlrat/template ["SELECT * FROM emp WHERE dept_id =" :dept-id "AND act =" :act])
+(def s #sqlrat/template "SELECT * FROM emp WHERE dept_id = :dept-id AND act = :act")
+(deftemplate s ["SELECT * FROM emp WHERE dept_id =" :dept-id "AND act =" :act])
+(deftemplate s "SELECT * FROM emp WHERE dept_id = :dept-id AND act = :act")
 ```
 
 Templates must be realized in order to generate the SQL and arguments:
 
 ```clojure
-(t/realize s {:dept-id 10 :active true})
-;;=> ("SELECT * FROM emp WHERE dept_id = ? AND active = ?" 10 true)
+(t/realize s {:dept-id 10 :act true})
+;;=> ("SELECT * FROM emp WHERE dept_id = ? AND act = ?" 10 true)
 ```
 
 ##### Multi-value keyword arguments
