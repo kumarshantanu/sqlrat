@@ -47,7 +47,7 @@
              :2138 {:dependencies [[org.clojure/clojurescript "0.0-2138"]]}
              :2156 {:dependencies [[org.clojure/clojurescript "0.0-2156"]]}
              :cb1 {:plugins [[lein-cljsbuild "1.0.0-alpha1"]]}
-             :cb2 {:plugins [[lein-cljsbuild "1.0.0"]]}
+             :cb2 {:plugins [[lein-cljsbuild "1.0.2"]]}
              :jst {:plugins [[com.cemerick/clojurescript.test "0.2.2"]]
                    :hooks [leiningen.cljsbuild]
                    :cljsbuild {:builds [{:source-paths ["target/generated/cljs" "target/generated/test-cljs"]
