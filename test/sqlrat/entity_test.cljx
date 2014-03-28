@@ -54,7 +54,7 @@
       (let [tf (e/find-where e [:dept-code] (e/cols [:emp-code]))
             tu (e/update-where e [:dept-code] (e/cols [:emp-code]))
             ;; Compare-and-swap use case
-            ts (e/update-where e [:dept-code] (e/cols {:emp-code :emp-code :dept-code :new-dept-code}))
+            ts (e/update-where e [:dept-code] (e/cols (array-map :emp-code :emp-code :dept-code :new-dept-code)))
             ;; Default-value use case
             tv (e/update-where e [:dept-code] (e/cols {:emp-code :emp-code :created-at :new-created-at}))
             tw (e/update-where e [:dept-code] (e/cols [:created-at]))
