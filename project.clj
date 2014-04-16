@@ -23,19 +23,12 @@
                   {:source-paths ["test"] :output-path "target/generated/test-cljs" :rules :cljs}]}
   :source-paths ["src"  "target/generated/clj" "resources"]
   :test-paths   ["test" "target/generated/test-clj"]
-  :profiles {:2060 {:dependencies [[org.clojure/clojurescript "0.0-2060"]]}
-             :2067 {:dependencies [[org.clojure/clojurescript "0.0-2067"]]}
-             :2075 {:dependencies [[org.clojure/clojurescript "0.0-2075"]]}
-             :2080 {:dependencies [[org.clojure/clojurescript "0.0-2080"]]}
-             :2120 {:dependencies [[org.clojure/clojurescript "0.0-2120"]]}
-             :2127 {:dependencies [[org.clojure/clojurescript "0.0-2127"]]}
-             :2134 {:dependencies [[org.clojure/clojurescript "0.0-2134"]]}
-             :2138 {:dependencies [[org.clojure/clojurescript "0.0-2138"]]}
-             :2156 {:dependencies [[org.clojure/clojurescript "0.0-2156"]]}
-             :2173 {:dependencies [[org.clojure/clojurescript "0.0-2173"]]}
-             :2197 {:dependencies [[org.clojure/clojurescript "0.0-2197"]]}
+  :profiles {:2197 {:dependencies [[org.clojure/clojurescript "0.0-2197"]]}
+             :2199 {:dependencies [[org.clojure/clojurescript "0.0-2199"]]}
+             :2202 {:dependencies [[org.clojure/clojurescript "0.0-2202"]]}
              :cb1 {:plugins [[lein-cljsbuild "1.0.0-alpha1"]]}
              :cb2 {:plugins [[lein-cljsbuild "1.0.2"]]}
+             :cb3 {:plugins [[lein-cljsbuild "1.0.3"]]}
              :jst {:plugins [[com.cemerick/clojurescript.test "0.3.0"]]
                    :hooks [leiningen.cljsbuild]
                    :cljsbuild {:builds [{:source-paths ["target/generated/cljs" "target/generated/test-cljs"]
@@ -58,18 +51,10 @@
   :cascade {:clean [["clean"]]
             :cljx  [["cljx" "once"]]
             :ccljx [:clean :cljx]
-            :2060 [["with-profile" "2060,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2067 [["with-profile" "2067,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2075 [["with-profile" "2075,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2080 [["with-profile" "2080,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2120 [["with-profile" "2120,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2127 [["with-profile" "2127,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2134 [["with-profile" "2134,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2138 [["with-profile" "2138,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2156 [["with-profile" "2156,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2173 [["with-profile" "2173,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :2197 [["with-profile" "2197,jst,cb2" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :cljs-all [:2060 :2067 :2075 :2080 :2120 :2127 :2134 :2138 :2156 :2173 :2197]
+            :2197 [["with-profile" "2197,jst,cb3" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :2199 [["with-profile" "2199,jst,cb3" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :2202 [["with-profile" "2202,jst,cb3" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :cljs-all [:2197 :2199 :2202]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :1.6 [["with-profile" "1.6,jvm" "test"]]
@@ -79,7 +64,7 @@
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
             "test1.5" [:ccljx :1.5]
-            "testdev" [:ccljx :1.6 :2197]
+            "testdev" [:ccljx :1.6 :2202]
             "testjvm" [:ccljx :clj-all]
             "testclr" [:clr-1.4 :clr-1.5]
             "testjs"  [:ccljx :cljs-all]
