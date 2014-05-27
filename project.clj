@@ -3,7 +3,7 @@
   :url "https://github.com/kumarshantanu/sqlrat"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :plugins [[com.keminglabs/cljx "0.3.2"]
+  :plugins [[com.keminglabs/cljx "0.4.0"]
             [lein-clr     "0.2.1"]
             [lein-cascade "0.1.2"]]
   :clr {:cmd-templates {:clj-url "http://sourceforge.net/projects/clojureclr/files/clojure-clr-1.4.1-Debug-4.0.zip/download"
