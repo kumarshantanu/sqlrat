@@ -30,6 +30,7 @@
              :2234 {:dependencies [[org.clojure/clojurescript "0.0-2234"]]}
              :2261 {:dependencies [[org.clojure/clojurescript "0.0-2261"]]}
              :2268 {:dependencies [[org.clojure/clojurescript "0.0-2268"]]}
+             :2277 {:dependencies [[org.clojure/clojurescript "0.0-2277"]]}
              :cb1 {:plugins [[lein-cljsbuild "1.0.0-alpha1"]]}
              :cb2 {:plugins [[lein-cljsbuild "1.0.2"]]}
              :cb3 {:plugins [[lein-cljsbuild "1.0.3"]]}
@@ -62,7 +63,8 @@
             :2234 [["with-profile" "2234,jst,cb3" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :2261 [["with-profile" "2261,jst,cb3,1.6" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
             :2268 [["with-profile" "2268,jst,cb3,1.6" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
-            :cljs-all [:2197 :2199 :2202 :2227 :2234 :2261 :2268]
+            :2277 [["with-profile" "2277,jst,cb3,1.6" "do" "cljsbuild" "clean," "cljsbuild" "test"]]
+            :cljs-all [:2197 :2199 :2202 :2227 :2234 :2261 :2268 :2277]
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :1.6 [["with-profile" "1.6,jvm" "test"]]
@@ -72,7 +74,7 @@
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
             "test1.5" [:ccljx :1.5]
-            "testdev" [:ccljx :1.6 :2268]
+            "testdev" [:ccljx :1.6 :2277]
             "testjvm" [:ccljx :clj-all]
             "testclr" [:clr-1.4 :clr-1.5]
             "testjs"  [:ccljx :cljs-all]
