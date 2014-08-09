@@ -35,7 +35,7 @@
              :cb1 {:plugins [[lein-cljsbuild "1.0.0-alpha1"]]}
              :cb2 {:plugins [[lein-cljsbuild "1.0.2"]]}
              :cb3 {:plugins [[lein-cljsbuild "1.0.3"]]}
-             :jst {:plugins [[com.cemerick/clojurescript.test "0.3.0"]]
+             :jst {:plugins [[com.cemerick/clojurescript.test "0.3.1"]]
                    :hooks [leiningen.cljsbuild]
                    :cljsbuild {:builds [{:source-paths ["target/generated/cljs" "target/generated/test-cljs"]
                                          :compiler {:output-to "target/cljs/testable.js"
@@ -43,7 +43,7 @@
                                                     :pretty-print true}}]
                                :test-commands {"tests-phantom" ["phantomjs" :runner      "target/cljs/testable.js"]
                                                "tests-slimer"  ["slimerjs"  :runner      "target/cljs/testable.js"]
-                                               "tests-nodejs"  ["node"      :node-runner "target/cljs/testable.js"]}}}
+                                               "tests-nodejs"  ["nodejs"    :node-runner "target/cljs/testable.js"]}}}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}
