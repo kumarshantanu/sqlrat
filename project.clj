@@ -50,6 +50,7 @@
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
              :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}
+             :1.7 {:dependencies [[org.clojure/clojure "1.7.0-alpha2"]]}
              :jvm {:test-paths ["test-clj"]}
              ;; Tagged literal tests fail on CLR, so commented out
              :clr-1.4 {:clr {:cmd-templates {:clj-exe [[?PATH "mono"] [CLJCLR14_40 %1]]}}
@@ -76,7 +77,8 @@
             :1.4 [["with-profile" "1.4,jvm" "test"]]
             :1.5 [["with-profile" "1.5,jvm" "test"]]
             :1.6 [["with-profile" "1.6,jvm" "test"]]
-            :clj-all [:1.4 :1.5 :1.6]
+            :1.7 [["with-profile" "1.7,jvm" "test"]]
+            :clj-all [:1.4 :1.5 :1.6 :1.7]
             :clr-1.4 [:ccljx ["with-profile" "clr-1.4" "clr" "test"]]
             :clr-1.5 [:ccljx ["with-profile" "clr-1.5" "clr" "test"]]
             :pkg [["with-profile" "pkg" %1]]
