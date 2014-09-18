@@ -4,17 +4,9 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[com.keminglabs/cljx "0.4.0"]
-            [lein-clr     "0.2.1"]
+            [lein-clr     "0.2.2"]
             [lein-cascade "0.1.2"]]
-  :clr {:cmd-templates {:clj-url "http://sourceforge.net/projects/clojureclr/files/clojure-clr-1.4.1-Debug-4.0.zip/download"
-                        :clj-zip "clojure-clr-1.4.1-Debug-4.0.zip"
-                        :clj-dep [[?PATH "mono"] ["target/clr/clj/Debug 4.0" %1]]
-                        ;; :clj-exe is defined in 1.4 and 1.5 profiles
-                        :wget    ["wget" "--no-check-certificate" "--no-clobber" "-O" %1 %2]
-                        :unzip   ["unzip" "-d" %1 %2]}
-        :deps-cmds [;[:wget  :clj-zip :clj-url]
-                    ;[:unzip "../clj" :clj-zip]
-                    ]
+  :clr {;; :cmd-templates -> :clj-exe is defined in 1.4, 1.5 and 1.6 profiles
         :main-cmd    [:clj-exe "Clojure.Main.exe"]
         :compile-cmd [:clj-exe "Clojure.Compile.exe"]}
   :cljx {:builds [{:source-paths ["src"]  :output-path "target/generated/clj"       :rules :clj}
@@ -57,6 +49,8 @@
                        :test-paths [#_"test-clj"]}
              :clr-1.5 {:clr {:cmd-templates {:clj-exe [[?PATH "mono"] [CLJCLR15_40 %1]]}}
                        :test-paths ["test-clj"]}
+             :clr-1.6 {:clr {:cmd-templates {:clj-exe [[?PATH "mono"] [CLJCLR16_40 %1]]}}
+                       :test-paths ["test-clj"]}
              :pkg {:source-paths ["target/generated/cljs"]}}
   :cascade {:clean [["clean"]]
             :cljx  [["cljx" "once"]]
@@ -81,13 +75,15 @@
             :clj-all [:1.4 :1.5 :1.6 :1.7]
             :clr-1.4 [:ccljx ["with-profile" "clr-1.4" "clr" "test"]]
             :clr-1.5 [:ccljx ["with-profile" "clr-1.5" "clr" "test"]]
+            :clr-1.6 [:ccljx ["with-profile" "clr-1.6" "clr" "test"]]
             :pkg [["with-profile" "pkg" %1]]
             "test1.4" [:ccljx :1.4]
             "test1.5" [:ccljx :1.5]
+            "test1.6" [:ccljx :1.6]
+            "test1.7" [:ccljx :1.7]
             "testdev" [:ccljx :1.6 :2341]
             "testjvm" [:ccljx :clj-all]
-            "testclr" [:clr-1.4 :clr-1.5]
+            "testclr" [:clr-1.4 :clr-1.5 :clr-1.6]
             "testjs"  [:ccljx :cljs-all]
             "testall" [:ccljx :clj-all :cljs-all "testclr"]
             "pkg"     [:ccljx :pkg]})
-
