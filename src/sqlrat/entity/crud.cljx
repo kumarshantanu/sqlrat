@@ -197,7 +197,7 @@
   {:colvals xs})
 
 
-(defn insert
+(defn sql-insert
   "Given map arguments containing keywords :table, :colnames and :colvals,
   return an INSERT SQL template."
   [& opts] {:pre [(um/verify (every? (some-fn map? nil?) opts) opts)]}
@@ -245,7 +245,7 @@
   {:order-cols x})
 
 
-(defn select
+(defn sql-select
   "Return a SELECT SQL template with specified clauses"
   [& opts] {:pre [(um/verify (every? (some-fn map? nil?) opts) opts)]}
   (let [{:keys [argmap distinct-rows colnames from-alias join-clauses
@@ -279,7 +279,8 @@
           (t/partial (merge argmap csmap w-argmap o-argmap))))))
 
 
-(defn update
+(defn sql-update
+  "Return a UPDATE SQL template with specified clauses"
   [& opts] {:pre [(um/verify (every? (some-fn map? nil?) opts) opts)]}
   (let [{:keys [argmap table colnames colvals where-cols where-op]
          :or {where-op "AND"}} (apply merge opts)]
@@ -298,7 +299,8 @@
           (t/partial (merge argmap csmap kvmap w-argmap))))))
 
 
-(defn delete
+(defn sql-delete
+  "Return a DELETE SQL template with specified clauses"
   [& opts] {:pre [(um/verify (every? (some-fn map? nil?) opts) opts)]}
   (let [{:keys [argmap table where-cols where-op]
          :or {where-op "AND"}} (apply merge opts)]

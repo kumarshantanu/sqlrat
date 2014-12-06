@@ -149,8 +149,8 @@
                    (apply array-map))
         ;; identifiers/symbols
         [iargs isyms] (crud/imap-colnames (map second rcols))]
-    (-> (crud/insert (crud/table 'table) (crud/colnames isyms)
-                     (crud/colvals colks))
+    (-> (crud/sql-insert (crud/table 'table) (crud/colnames isyms)
+                         (crud/colvals colks))
         (t/partial iargs)
         (t/partial dcols)
         (t/partial (if-let [n (:table e)] {'table n} {}))
@@ -205,7 +205,7 @@
          :or {distinct-rows false}} (apply merge opts)
         where-vcols (when where-cols (ii/as-where-cols e where-cols))
         where-keyws (map last where-vcols)]
-    (-> (crud/select
+    (-> (crud/sql-select
          (crud/distinct-rows distinct-rows)
          (crud/from-alias 'table)
          (crud/colnames (ii/get-colnames e (first (ii/resolve-cols e cols "SELECT"))))
@@ -262,7 +262,7 @@
                            (remove (comp nil? :default last))
                            (mapcat (fn [[pc spec]] [pc (:default spec)]))
                            (apply array-map))]
-      (-> (crud/update
+      (-> (crud/sql-update
            (crud/table 'table)
            (crud/colnames (ii/get-colnames e update-cols))
            (crud/colvals ph-cols)
@@ -292,7 +292,7 @@
   (let [{:keys [where-cols where-op]} (apply merge opts)
         where-vcols (when where-cols (ii/as-where-cols e where-cols))
         where-keyws (map last where-vcols)]
-    (-> (crud/delete
+    (-> (crud/sql-delete
          (crud/table 'table)
          (and where-cols (crud/where-cols where-vcols))
          (and where-op (crud/where-op where-op)))
